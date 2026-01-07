@@ -33,6 +33,5 @@ const copyStaticFiles = async (src, dest) => {
 
 await copyStaticFiles('css', 'public/css');
 await copyStaticFiles('data', 'public/data');
-await copyStaticFiles('pages', 'public/pages');
 
 console.log('✅ Build complete!');
