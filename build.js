@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import { copyFile, mkdir, readdir, rm } from "node:fs/promises";
 import { join } from "node:path";
 
-const BUILD_DIR = "build";
+const BUILD_DIR = "dist";
 const PAGES_DIR = "pages";
 const CSS_DIR = "css";
 

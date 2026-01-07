@@ -30,7 +30,7 @@ bun run build
 4. Select your repository
 5. Set build settings:
    - **Build command**: `bun run build`
-   - **Build output directory**: `public`
+   - **Build output directory**: `dist`
    - **Root directory**: `/`
 6. Click "Save and Deploy"
 
@@ -39,6 +39,6 @@ bun run build
 For Cloudflare Workers/Pages to properly serve the Bun app:
 - Make sure `index.ts` is the entry point
 - The `wrangler.toml` configuration handles routing
-- Static files (CSS, JS, etc.) are served from the `public` directory
+- Static files (CSS, JS, etc.) are served from the `dist` directory
 
 This project uses [Bun](https://bun.com) - a fast all-in-one JavaScript runtime.
