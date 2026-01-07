@@ -29,13 +29,15 @@ async function build() {
     await copyFile(htmlSource, htmlDest);
     console.log(`   ✓ ${htmlSource} → ${htmlDest}`);
 
-    // Copy CSS files
+    // Copy CSS files to css subdirectory
     console.log("\n🎨 Copying CSS files...");
+    const cssDestDir = join(BUILD_DIR, "css");
+    await mkdir(cssDestDir, { recursive: true });
     const cssFiles = await readdir(CSS_DIR);
     for (const file of cssFiles) {
       if (file.endsWith(".css")) {
         const source = join(CSS_DIR, file);
-        const dest = join(BUILD_DIR, file);
+        const dest = join(cssDestDir, file);
         await copyFile(source, dest);
         console.log(`   ✓ ${source} → ${dest}`);
       }
