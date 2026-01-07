@@ -102,6 +102,12 @@ button,
   cursor: pointer;
   transition: background-color var(--transition-fast);
   font-family: var(--font-sans);
+  text-decoration: none;
+}
+
+a.button,
+a.button:visited {
+  color: white;
 }
 
 button:hover,

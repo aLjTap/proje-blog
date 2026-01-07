@@ -6,6 +6,6 @@
   "exclude": [
     "/css/*",
     "/js/*",
-    "/public/*"
+    "/build/*"
   ]
 }

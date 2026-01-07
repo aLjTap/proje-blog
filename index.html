@@ -38,20 +38,53 @@
   </footer>
 
   <script>
+    // Blog posts data
+    const postsData = {
+      posts: [
+        {
+          "id": "001",
+          "slug": "minimalist-web-design",
+          "title": "Minimalist Web Tasarımının Güzellikleri",
+          "excerpt": "Basitlik ve işlevselliğin mükemmel birleşimi olan minimalist tasarım prensipleri hakkında.",
+          "content": "<p>Minimalist web tasarımı, gereksiz öğeleri kaldırarak sadece gerekli olanları vurgulayan bir tasarım felsefesidir. 21. yüzyılda, dijital ortamda kullanıcılar gittikçe daha fazla bilgiyle karşılaşıyor ve bu da tasarımcılar için basitliğin önemini artırıyor.</p>\n\n<h2>Neden Minimalist?</h2>\n<p>Minimalist tasarım, kullanıcı deneyimini iyileştirir. Daha az görsel karmaşa, daha iyi odaklanma anlamına gelir. Ziyaretçiler sitenize girdiğinde, hemen ne yapması gerektiğini anlamalıdır.</p>\n\n<h2>Temel Prensipler</h2>\n<p>Minimalist tasarımın başlıca prensipleri şunlardır:</p>\n<ul>\n<li>Beyaz boşluk (whitespace) kullanımı</li>\n<li>Sınırlı renk paleti</li>\n<li>Basit tipografi</li>\n<li>Açık navigasyon</li>\n<li>Hızlı yükleme süresi</li>\n</ul>\n\n<h2>Sonuç</h2>\n<p>Minimalist tasarım sadece estetik değil, işlevsellik ve kullanıcı memnuniyetinin anahtarıdır. İyi bir minimalist tasarım, kullanıcının görmek istediği şeyi vurgular ve başka her şeyi uzak tutar.</p>",
+          "date": "2025-01-05T14:30:00Z",
+          "author": "Ali Tap",
+          "tags": ["tasarım", "web", "minimalist"],
+          "readTime": 6
+        },
+        {
+          "id": "002",
+          "slug": "bun-baslangic",
+          "title": "Bun ile Web Geliştirmeye Başlarken",
+          "excerpt": "Bun runtime'ı nedir ve neden modern JavaScript geliştirmesi için iyi bir seçimdir?",
+          "content": "<p>Bun, JavaScript ve TypeScript için ultra-hızlı bir runtime'dır. Node.js'in yerini almaya aday bir teknoloji olarak görülüyor ve geliştirici deneyimini önemli ölçüde iyileştiriyor.</p>\n\n<h2>Bun'un Avantajları</h2>\n<p>Bun'un birçok avantajı vardır:</p>\n<ul>\n<li><strong>Hız</strong>: Node.js'den çok daha hızlı başlangıç ve yürütme</li>\n<li><strong>Tümleşik</strong>: Package manager, test runner ve bundler hepsi dahil</li>\n<li><strong>TypeScript desteği</strong>: İlk sınıf TypeScript desteği</li>\n<li><strong>Web API'leri</strong>: Fetch, WebSocket vb. yerleşik</li>\n<li><strong>Dosya sistemi</strong>: Bun.file() ile kolay dosya işlemleri</li>\n</ul>\n\n<h2>Başlangıç</h2>\n<p>Bun kurmak basittir. Resmi sitesinden indirebilir veya paket yöneticileriyle kurabilirsiniz. Kurulduktan sonra, bun komutunu doğrudan kullanabilirsiniz.</p>\n\n<h2>Sonraki Adımlar</h2>\n<p>Bun hakkında daha fazla öğrenmek için, resmi dokümantasyonu ziyaret etmenizi önerilir. Bun, JavaScript topluluğunun geleceğini şekillendirmeye devam edecek gibi görünüyor.</p>",
+          "date": "2025-01-07T10:00:00Z",
+          "author": "Ali Tap",
+          "tags": ["bun", "javascript", "teknoloji"],
+          "readTime": 8
+        },
+        {
+          "id": "003",
+          "slug": "blog-olusturma-süreci",
+          "title": "Bu Blog Sayfasının Oluşturma Süreci",
+          "excerpt": "Plain HTML, CSS ve JavaScript kullanarak bir blog sayfası nasıl yapılır?",
+          "content": "<p>Bu blog sayfası, sadece HTML, CSS ve vanilla JavaScript kullanarak oluşturulmuştur. Framework'lere ihtiyaç yok, basit ve etkili bir çözüm yeterli.</p>\n\n<h2>Teknoloji Seçimi</h2>\n<p>Bu projedeki teknoloji seçimlerinin sebepleri:</p>\n<ul>\n<li><strong>Bun</strong>: Hızlı, modern ve TypeScript desteği</li>\n<li><strong>Plain HTML/CSS/JS</strong>: Karmaşıklık yok, öğrenme eğrisi düşük</li>\n<li><strong>JSON veri</strong>: Veritabanına ihtiyaç yok, basit veri yönetimi</li>\n<li><strong>Minimalist tasarım</strong>: Odaklanmış, temiz bir arayüz</li>\n</ul>\n\n<h2>Mimarı</h2>\n<p>Sitede kullanılan mimarı oldukça basittir:</p>\n<ol>\n<li>Bun sunucusu tüm HTML sayfalarını sunar</li>\n<li>JSON dosyasından blog yazıları yüklenir</li>\n<li>Client-side JavaScript, dinamik sayfa yükleme yapılır</li>\n<li>CSS, minimalist tasarım prensiplerine göre yazılmıştır</li>\n</ol>\n\n<h2>Avantajları</h2>\n<p>Bu yaklaşım birçok avantaja sahiptir: hızlı yükleme, düşük bakım maliyeti, kolay özelleştirme ve herhangi bir external dependency'ye ihtiyaç olmadan çalışma.</p>",
+          "date": "2025-01-07T12:00:00Z",
+          "author": "Ali Tap",
+          "tags": ["blog", "geliştirme", "web"],
+          "readTime": 7
+        }
+      ]
+    };
+
     // Global app object
     const app = {
       posts: [],
       currentPath: '/',
 
       async init() {
-        // Load posts from API
-        try {
-          const response = await fetch('/api/posts');
-          const data = await response.json();
-          this.posts = data.posts || [];
-        } catch (error) {
-          console.error('Error loading posts:', error);
-        }
+        // Load posts from embedded data
+        this.posts = postsData.posts || [];
 
         // Handle initial path
         this.currentPath = window.location.pathname;
