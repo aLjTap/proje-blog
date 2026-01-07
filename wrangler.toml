@@ -1,0 +1,6 @@
+name = "proje-blog"
+main = "index.ts"
+compatibility_date = "2024-12-20"
+
+[env.production]
+name = "proje-blog-production"

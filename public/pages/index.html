@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog - Ali Tap</title>
+  <meta name="description" content="Minimalist blog yazılarım">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/typography.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="logo" onclick="app.navigate('/')">Blog</a>
+      <nav id="main-nav">
+        <a href="/" class="nav-home active" onclick="app.navigate('/'); return false;">Ana Sayfa</a>
+        <a href="/about" class="nav-about" onclick="app.navigate('/about'); return false;">Hakkımda</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container" id="app-content">
+      <!-- App content will be rendered here -->
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-text">&copy; 2025 Ali Tap. Tüm hakları saklıdır.</div>
+      <div class="footer-links">
+        <a href="/" onclick="app.navigate('/'); return false;">Blog</a>
+        <a href="https://alitap.vercel.app" target="_blank" rel="noopener noreferrer">Portföy</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Global app object
+    const app = {
+      posts: [],
+      currentPath: '/',
+
+      async init() {
+        // Load posts from API
+        try {
+          const response = await fetch('/api/posts');
+          const data = await response.json();
+          this.posts = data.posts || [];
+        } catch (error) {
+          console.error('Error loading posts:', error);
+        }
+
+        // Handle initial path
+        this.currentPath = window.location.pathname;
+        this.render();
+
+        // Handle browser back/forward
+        window.addEventListener('popstate', () => {
+          this.currentPath = window.location.pathname;
+          this.render();
+        });
+      },
+
+      navigate(path) {
+        this.currentPath = path;
+        window.history.pushState({ path }, '', path);
+        this.render();
+      },
+
+      render() {
+        const content = document.getElementById('app-content');
+        this.updateNav();
+
+        if (this.currentPath === '/' || this.currentPath === '') {
+          content.innerHTML = this.renderHome();
+          this.attachPostClickHandlers();
+        } else if (this.currentPath === '/about') {
+          content.innerHTML = this.renderAbout();
+        } else if (this.currentPath.startsWith('/post/')) {
+          const slug = this.currentPath.replace('/post/', '');
+          content.innerHTML = this.renderPost(slug);
+          this.attachPostNavigation();
+        } else {
+          content.innerHTML = '<p>Sayfa bulunamadı.</p>';
+        }
+
+        window.scrollTo(0, 0);
+      },
+
+      updateNav() {
+        document.querySelectorAll('#main-nav a').forEach(link => {
+          link.classList.remove('active');
+        });
+
+        if (this.currentPath === '/' || this.currentPath === '') {
+          document.querySelector('.nav-home').classList.add('active');
+        } else if (this.currentPath === '/about') {
+          document.querySelector('.nav-about').classList.add('active');
+        }
+      },
+
+      renderHome() {
+        return `
+          <section class="hero">
+            <h1>Hoş Geldiniz</h1>
+            <p class="lead">Yazılım geliştirme, web tasarımı ve teknoloji hakkında yazılar</p>
+          </section>
+
+          <section id="posts-section">
+            <h2>Son Yazılar</h2>
+            <div id="posts-list" class="posts-container">
+              ${this.posts.map(post => `
+                <div class="post-card" data-slug="${post.slug}">
+                  <h3>${this.escapeHtml(post.title)}</h3>
+                  <p class="post-card-excerpt">${this.truncateText(this.stripHtml(post.content), 150)}</p>
+                  <div class="post-card-footer">
+                    <span class="post-date">${this.formatDate(post.date)}</span>
+                    <span class="post-read-time">${post.readTime} dk okuma</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <section id="about" class="about-section">
+            <h2>Hakkımda</h2>
+            <p>Merhaba! Ben Ali Tap, yazılım geliştirici ve web tasarımcısı. Modern web teknolojileri, minimalist tasarım ve temiz kod konularında tutkulu bir kişiyim.</p>
+            <p>Daha fazla bilgi için <a href="https://alitap.vercel.app" target="_blank" rel="noopener noreferrer">portföyümü ziyaret edin</a>.</p>
+            <p style="margin-top: var(--spacing-2xl);">
+              <a href="/" class="button" onclick="app.navigate('/about'); return false;">Hakkımda Sayfasını Aç</a>
+            </p>
+          </section>
+        `;
+      },
+
+      renderAbout() {
+        return `
+          <article class="article-header">
+            <h1>Hakkımda</h1>
+          </article>
+
+          <section>
+            <p class="lead">Merhaba! Ben Ali Tap, yazılım geliştirici ve web tasarımcısı.</p>
+
+            <h2>Kim Olduğum</h2>
+            <p>Yazılım geliştirme tutkusuyla başlayan bir yolculuğun içindeyim. Modern web teknolojileri, temiz kod ve minimalist tasarım prensipleri beni motive eden başlıca konularıdır.</p>
+
+            <p>Web'i sadece işlevsel değil, aynı zamanda güzel ve erişilebilir kılmaya inanıyorum. Kullanıcı deneyimi her zaman kararların merkezinde yer alır.</p>
+
+            <h2>Uzmanlık Alanlarım</h2>
+            <ul>
+              <li><strong>Frontend Development:</strong> HTML, CSS, JavaScript, React</li>
+              <li><strong>Backend Development:</strong> Node.js, Bun, Python</li>
+              <li><strong>Web Design:</strong> Minimalist tasarım, UX/UI prensipler</li>
+              <li><strong>Performance:</strong> Web sitesi optimizasyonu, hız iyileştirmesi</li>
+            </ul>
+
+            <h2>Bu Blog</h2>
+            <p>Bu blog, yazılım geliştirme ve web tasarımı hakkında düşüncelerimi, öğrendiklerimi ve deneyimlerimi paylaştığım bir alan. Modern web teknolojilerinden minimalist tasarım prensitlerine kadar çeşitli konular hakkında yazılar burada.</p>
+
+            <h2>Bana Ulaşın</h2>
+            <p>Portföyümü ve diğer çalışmalarımı görmek için <a href="https://alitap.vercel.app" target="_blank" rel="noopener noreferrer">alitap.vercel.app</a> adresini ziyaret edebilirsiniz.</p>
+
+            <p style="margin-top: var(--spacing-2xl);">
+              <a href="/" class="button" onclick="app.navigate('/'); return false;">← Ana Sayfaya Dön</a>
+            </p>
+          </section>
+        `;
+      },
+
+      renderPost(slug) {
+        const post = this.posts.find(p => p.slug === slug);
+        if (!post) {
+          return '<p>Yazı bulunamadı.</p>';
+        }
+
+        const currentIndex = this.posts.findIndex(p => p.id === post.id);
+        const prevPost = currentIndex > 0 ? this.posts[currentIndex - 1] : null;
+        const nextPost = currentIndex < this.posts.length - 1 ? this.posts[currentIndex + 1] : null;
+
+        let navHtml = '';
+        if (prevPost) {
+          navHtml += `
+            <div class="nav-previous">
+              <a href="/post/${prevPost.slug}" onclick="app.navigate('/post/${prevPost.slug}'); return false;">
+                <span class="nav-label">← Önceki Yazı</span>
+                <span class="nav-title">${this.escapeHtml(prevPost.title)}</span>
+              </a>
+            </div>
+          `;
+        } else {
+          navHtml += '<div class="nav-previous"></div>';
+        }
+
+        if (nextPost) {
+          navHtml += `
+            <div class="nav-next">
+              <a href="/post/${nextPost.slug}" onclick="app.navigate('/post/${nextPost.slug}'); return false;">
+                <span class="nav-label">Sonraki Yazı →</span>
+                <span class="nav-title">${this.escapeHtml(nextPost.title)}</span>
+              </a>
+            </div>
+          `;
+        } else {
+          navHtml += '<div class="nav-next"></div>';
+        }
+
+        const tagsHtml = post.tags && post.tags.length > 0
+          ? `<div class="tags">${post.tags.map(tag => `<span class="tag">${this.escapeHtml(tag)}</span>`).join('')}</div>`
+          : '';
+
+        return `
+          <article>
+            <div class="article-header">
+              <h1>${this.escapeHtml(post.title)}</h1>
+              <div class="article-meta">
+                <span class="post-author">Yazar: ${this.escapeHtml(post.author)}</span>
+                <span class="post-date">${this.formatDate(post.date)}</span>
+                <span class="post-read-time">${post.readTime} dakika okuma</span>
+              </div>
+            </div>
+            ${tagsHtml}
+            <div class="post-body">
+              ${post.content}
+            </div>
+          </article>
+
+          <nav class="navigation">
+            ${navHtml}
+          </nav>
+        `;
+      },
+
+      attachPostClickHandlers() {
+        document.querySelectorAll('.post-card').forEach(card => {
+          card.addEventListener('click', () => {
+            const slug = card.getAttribute('data-slug');
+            this.navigate(`/post/${slug}`);
+          });
+        });
+      },
+
+      attachPostNavigation() {
+        // Navigation is already handled by onclick attributes
+      },
+
+      formatDate(dateString) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString('tr-TR', options);
+      },
+
+      stripHtml(html) {
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+        return temp.textContent || temp.innerText || '';
+      },
+
+      truncateText(text, length = 150) {
+        if (text.length <= length) return text;
+        return text.substring(0, length).trim() + '...';
+      },
+
+      escapeHtml(text) {
+        const map = {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, m => map[m]);
+      }
+    };
+
+    // Initialize app when DOM is ready
+    document.addEventListener('DOMContentLoaded', () => {
+      app.init();
+    });
+  </script>
+</body>
+</html>
