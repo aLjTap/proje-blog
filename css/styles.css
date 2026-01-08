@@ -63,7 +63,7 @@ body {
 
 /* Main content wrapper */
 main {
-  min-height: calc(100vh - var(--header-height) - 200px);
+  width: 100%;
 }
 
 /* Container */
